@@ -1,7 +1,0 @@
-function getBody() { return {
-
-	"hd": {
-		"name": "head"
-	}
-
-};}

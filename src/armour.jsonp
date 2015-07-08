@@ -1,0 +1,390 @@
+/*
+ * Get a copy of armour. Components are ordered from head to toe and by layer.
+ *
+ * Format:
+ *      "keyword": {
+ *          "name": "full name",
+ *          "description": "description",
+ *          "bodyparts": [ codes of body parts protected ],
+ *          "materials": [ code of materials available ],
+ *          "weight": weight of 100% coverage,
+ *          "price": price of 100% coverage
+ *     }
+ */
+function getArmor() { return {
+
+    "materials": {
+        "cloth": {
+            "name": "Cloth",
+            "aspects": {
+                "b": 0,
+                "e": 1,
+                "p": 0,
+                "f": 1,
+                "s": 0,
+                "t": 1,
+            },
+            "weight": 5,
+            "price": 100
+        },
+        "leather": {
+            "name": "Leather",
+            "aspects": {
+                "b": 1,
+                "e": 2,
+                "p": 1,
+                "f": 3,
+                "s": 0,
+                "t": 2,
+            },
+            "weight": 15,
+            "price": 200
+        },
+        "quilt": {
+            "name": "Quilt",
+            "aspects": {
+                "b": 5,
+                "e": 1,
+                "p": 1,
+                "f": 3,
+                "s": 1,
+                "t": 3,
+            },
+            "weight": 20,
+            "price": 400
+        },
+        "kurbul": {
+            "name": "K&#251;rb&#250;l",
+            "aspects": {
+                "b": 4,
+                "e": 4,
+                "p": 3,
+                "f": 3,
+                "s": 2,
+                "t": 4,
+            },
+            "weight": 18,
+            "price": 500
+        },
+        "ring": {
+            "name": "Ring",
+            "aspects": {
+                "b": 2,
+                "e": 5,
+                "p": 1,
+                "f": 3,
+                "s": 1,
+                "t": 4,
+            },
+            "weight": 40,
+            "price": 700
+        },
+        "scale": {
+            "name": "Scale",
+            "aspects": {
+                "b": 3,
+                "e": 5,
+                "p": 4,
+                "f": 4,
+                "s": 1,
+                "t": 5,
+            },
+            "weight": 60,
+            "price": 1000
+        },
+        "mail": {
+            "name": "Mail",
+            "aspects": {
+                "b": 2,
+                "e": 7,
+                "p": 6,
+                "f": 4,
+                "s": 0,
+                "t": 8,
+            },
+            "weight": 50,
+            "price": 1500
+        },
+        "plate": {
+            "name": "Plate",
+            "aspects": {
+                "b": 5,
+                "e": 8,
+                "p": 7,
+                "f": 5,
+                "s": 3,
+                "t": 10,
+            },
+            "weight": 60,
+            "price": 1500
+        }
+    },
+
+    "components": {
+        // Head
+        "cap": {
+            "name": "Hat/Cap",
+            "description": "Covers the top of the head.",
+            "category": "Head",
+            "bodyparts": ["sk"],
+            "materials": ["leather"]
+        },
+        "cowl/sh": {
+            "name": "Cowl/Coif (Short)",
+            "description": "A cowl is a large loose hood. A coif is a close fitting cap.",
+            "category": "Head",
+            "bodyparts": ["sk", "nk"],
+            "materials": ["cloth", "leather", "quilt", "ring", "scale", "mail"]
+        },
+        "cowl/lg": {
+            "name": "Cowl/Coif (Long)",
+            "description": "A cowl is a large loose hood. A coif is a close fitting cap.",
+            "category": "Head",
+            "bodyparts": ["sk", "nk", "sh"],
+            "materials": ["cloth", "leather", "quilt", "ring", "scale", "mail"]
+        },
+
+        "halfhelm": {
+            "name": "Halfhelm",
+            "description": "A helmet protecting the skull.",
+            "category": "Head",
+            "bodyparts": ["sk"],
+            "materials": ["kurbul", "ring", "plate", "mail"]
+        },
+        "greathelm": {
+            "name": "Great Helm",
+            "description": "A helmet protecting the skull, face, and neck.",
+            "category": "Head",
+            "bodyparts": ["sk", "fa", "nk"],
+            "materials": ["plate"]
+        },
+        "gorget": {
+            "name": "Gorget",
+            "description": "Protects neck.",
+            "category": "Head",
+            "bodyparts": ["nk"],
+            "materials": ["plate"]
+        },
+
+        // Torso
+        "vest": {
+            "name": "Vest",
+            "description": "A sleeveless shirt to the waist.",
+            "category": "Torso",
+            "bodyparts": ["sh", "tx_ch", "tx_bk", "ab_ch", "ab_bk"],
+            "materials": ["cloth"]
+        },
+        "shirt/sh": {
+            "name": "Shirt (Short)",
+            "description": "A short sleeve shirt to the waist.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk"],
+            "materials": ["quilt"]
+        },
+        "shirt/lg": {
+            "name": "Shirt (Long)",
+            "description": "A short sleeve shirt to below the groin.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr"],
+            "materials": ["cloth", "ring"]
+        },
+        "shirt/sleeve": {
+            "name": "Shirt w/Sleeve",
+            "description": "A long sleeve shirt to below the groin.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "el", "fo", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr"],
+            "materials": ["cloth"]
+        },
+        "tunic": {
+            "name": "Tunic",
+            "description": "A short sleeve shirt to above the knees.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th"],
+            "materials": ["cloth", "leather", "quilt"]
+        },
+        "smock": {
+            "name": "Smock",
+            "description": "A long sleeve shirt to above the knees.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "el", "fo", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th"],
+            "materials": ["cloth", "quilt"]
+        },
+        "surcoat": {
+            "name": "Surcoat",
+            "description": "A sleeveless shirt to below the knees.",
+            "category": "Torso",
+            "bodyparts": ["sh", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th", "kn"],
+            "materials": ["cloth", "quilt"]
+        },
+        "robe": {
+            "name": "Robe",
+            "description": "A long sleeve shirt to above the feet.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "el", "fo", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th", "kn", "cf"],
+            "materials": ["cloth"]
+        },
+
+        "gambeson": {
+            "name": "Gambeson",
+            "description": "A padded short sleeve jacket to above the knees.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th"],
+            "materials": ["quilt"]
+        },
+
+        "habergeon": {
+            "name": "Habergeon",
+            "description": "A sleeveless coat of mail to below the groin.",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr"],
+            "materials": ["scale", "mail"]
+        },
+        "hauberk/sh": {
+            "name": "Hauberk (Short)",
+            "description": "A short sleeve coat of mail to above the knees",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th"],
+            "materials": ["ring", "scale", "mail"]
+        },
+        "hauberk/lg": {
+            "name": "Hauberk (Long)",
+            "description": "A short sleeve coat of mail to below at the knees",
+            "category": "Torso",
+            "bodyparts": ["sh", "ua", "tx_ch", "tx_bk", "ab_ch", "ab_bk", "hp", "gr", "th", "kn"],
+            "materials": ["ring", "scale", "mail"]
+        },
+
+        "breastplate": {
+            "name": "Breastplate",
+            "description": "Plate covering the chest.",
+            "category": "Torso",
+            "bodyparts": ["tx_ch", "ab_ch"],
+            "materials": ["kurbul", "plate"]
+        },
+        "cuirass": {
+            "name": "Cuirass",
+            "description": "Plate covering the torso.",
+            "category": "Torso",
+            "bodyparts": ["tx_ch", "tx_bk", "ab_ch", "ab_bk"],
+            "materials": ["kurbul", "plate"]
+        },
+
+        // Arms & Hands
+        "ailettes": {
+            "name": "Ailettes",
+            "description": "Flat shoulder cover.",
+            "category": "Arms",
+            "bodyparts": ["sh"],
+            "materials": ["kurbul", "plate"]
+        },
+        "rerebraces": {
+            "name": "Rerebraces",
+            "description": "Protects upper arms.",
+            "category": "Arms",
+            "bodyparts": ["ua"],
+            "materials": ["kurbul", "plate"]
+        },
+        "coudes": {
+            "name": "Coudes",
+            "description": "Protects elbow.",
+            "category": "Arms",
+            "bodyparts": ["el"],
+            "materials": ["kurbul", "plate"]
+        },
+        "vambraces": {
+            "name": "Vambraces",
+            "description": "Protects forearms.",
+            "category": "Arms",
+            "bodyparts": ["fo"],
+            "materials": ["leather", "kurbul", "plate"]
+        },
+        "gauntlets": {
+            "name": "Gauntlets",
+            "description": "Gloves.",
+            "category": "Arms",
+            "bodyparts": ["ha"],
+            "materials": ["leather", "ring", "mail"]
+        },
+        "mittens": {
+            "name": "Mittens",
+            "description": "Mittens.",
+            "category": "Arms",
+            "bodyparts": ["ha"],
+            "materials": ["mail"]
+        },
+
+        // Legs
+        "breeches": {
+            "name": "Breeches",
+            "description": "Pants from waist to the knees.",
+            "category": "Legs",
+            "bodyparts": ["hp", "gr", "th", "kn"],
+            "materials": ["cloth", "leather"]
+        },
+        "hose": {
+            "name": "Hose/Trousers",
+            "description": "Pants from waist to ankles.",
+            "category": "Legs",
+            "bodyparts": ["hp", "gr", "th", "kn", "cf"],
+            "materials": ["cloth", "leather", "quilt"]
+        },
+        "leggings": {
+            "name": "Leggings",
+            "description": "Covers upper legs and feet.",
+            "category": "Legs",
+            "bodyparts": ["th", "kn", "cf", "ft"],
+            "materials": ["cloth", "leather", "quilt", "ring", "scale", "mail"]
+        },
+        "kneecops": {
+            "name": "Kneecops",
+            "description": "Protects knees.",
+            "category": "Legs",
+            "bodyparts": ["kn"],
+            "materials": ["kurbul", "plate"]
+        },
+        "calvesswaddle": {
+            "name": "Calves Swaddle",
+            "description": "Protects calves.",
+            "category": "Legs",
+            "bodyparts": ["cf"],
+            "materials": ["cloth"]
+        },
+        "greaves": {
+            "name": "Greaves",
+            "description": "Protects calves.",
+            "category": "Legs",
+            "bodyparts": ["cf"],
+            "materials": ["kurbul", "plate"]
+        },
+
+        // Feet,
+        "kneeboots": {
+            "name": "Knee Boots",
+            "description": "Protects knees, calves, and feet.",
+            "category": "Legs",
+            "bodyparts": ["kn", "cf", "ft"],
+            "materials": ["leather"]
+        },
+        "footswaddle": {
+            "name": "Foot Swaddle",
+            "description": "Protects calves and feet.",
+            "category": "Legs",
+            "bodyparts": ["cf", "ft"],
+            "materials": ["cloth"]
+        },
+        "calfboots": {
+            "name": "Calf Boots",
+            "description": "Protects calves and feet.",
+            "category": "Legs",
+            "bodyparts": ["cf", "ft"],
+            "materials": ["leather"]
+        },
+        "shoes": {
+            "name": "Shoes",
+            "description": "Protects feet.",
+            "category": "Legs",
+            "bodyparts": ["ft"],
+            "materials": ["leather"]
+        }
+    }
+};}

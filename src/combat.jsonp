@@ -1,0 +1,34 @@
+/*
+ * Get combat numbers.
+ *
+ * Format:
+ *      "name": {
+ *          "description": "description",
+ *          "bodyparts": [ codes of body parts protected ],
+ *          "materials": [ code of materials available 
+            }
+ *     }
+ */
+function getCombat() { return {
+
+    "aspects": {
+        "b": {
+            "name": "Blunt"
+        },
+        "e": {
+            "name": "Edge"
+        },
+        "p": {
+            "name": "Point"
+        },
+        "f": {
+            "name": "Fire/Frost"
+        },
+        "s": {
+            "name": "Squeeze"
+        },
+        "t": {
+            "name": "Tear"
+        }
+    }
+};}
