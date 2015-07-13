@@ -1,3 +1,5 @@
+var data = {};
+var custom = {};
 var state = {};
 
 function clone(object) {
@@ -27,8 +29,8 @@ function getBodyPartAspectValues() {
     var bodyPartAspectValues = {};
 
     // Set all body part and aspect combinations to 0;
-    for( var bodyPartKey in state.bodyparts ) {
-        for (var aspectKey in state.combat.aspects) {
+    for( var bodyPartKey in data.bodyparts ) {
+        for (var aspectKey in data.combat.aspects) {
             bodyPartAspectValues[bodyPartKey + "-" + aspectKey] = 0;
         }
     }
@@ -41,8 +43,8 @@ function getBodyPartAspectValues() {
             continue;
         }
 
-        var componentBodyparts = state.armour.components[kit.componentKey].bodyparts;
-        var materialAspects = state.armour.materials[kit.materialKey].aspects;
+        var componentBodyparts = data.armour.components[kit.componentKey].bodyparts;
+        var materialAspects = data.armour.materials[kit.materialKey].aspects;
 
         for( var bodyPartIndex in componentBodyparts ) {
             var bodyPartKey = componentBodyparts[bodyPartIndex];
@@ -60,8 +62,8 @@ function display() {
     // Table header
     var statsRows = "<tr><th></th>";
 
-    for( var aspectKey in state.combat.aspects ) {
-        statsRows += "<th>" + state.combat.aspects[aspectKey].name + "</th>";
+    for( var aspectKey in data.combat.aspects ) {
+        statsRows += "<th>" + data.combat.aspects[aspectKey].name + "</th>";
     }
     statsRows += "</tr>";
 
@@ -70,14 +72,14 @@ function display() {
 
     // Body Parts Table
     var lastCategory;
-    for( var bodyPartKey in state.bodyparts ) {
-        var bodypart = state.bodyparts[bodyPartKey];
+    for( var bodyPartKey in data.bodyparts ) {
+        var bodypart = data.bodyparts[bodyPartKey];
 
         var cssClass = (lastCategory && bodypart.category !== lastCategory) ? " class='newCategory'" : "";
         statsRows += "<tr " + "id='" + bodyPartKey + "' " + cssClass + "><td>" + bodypart.name + "</td>";
         lastCategory = bodypart.category;
 
-        for( var aspectKey in state.combat.aspects ) {
+        for( var aspectKey in data.combat.aspects ) {
             statsRows += "<td id='" + bodyPartKey + "-" + aspectKey + "'>" + bodyPartAspectValues[bodyPartKey + "-" + aspectKey] + "</td>";
         }
         statsRows += "</tr>";
@@ -86,20 +88,20 @@ function display() {
     // Armor table
     var armourRows = "<tr><th></th>";
 
-    for( var materialKey in state.armour.materials ) {
-        armourRows += "<th>" + state.armour.materials[materialKey].name + "</th>";
+    for( var materialKey in data.armour.materials ) {
+        armourRows += "<th>" + data.armour.materials[materialKey].name + "</th>";
     }
     armourRows += "</tr>";
 
     lastCategory = null;
-    for( var componentKey in state.armour.components ) {
-        var component = state.armour.components[componentKey];
+    for( var componentKey in data.armour.components ) {
+        var component = data.armour.components[componentKey];
 
         var cssClass = (lastCategory && component.category !== lastCategory) ? " class='newCategory'" : "";
         armourRows += "<tr " + "id='" + componentKey + "' " + cssClass + "><td>" + component.name + "</td>";
         lastCategory = component.category;
 
-        for( var materialKey in state.armour.materials ) {
+        for( var materialKey in data.armour.materials ) {
             if( component.materials.indexOf( materialKey ) >= 0 ) {
                 armourRows +=
                     "<td id='" + componentKey + "-" + materialKey + "'>" +
@@ -159,7 +161,7 @@ function highlightComponents( bodyPartKey, enable ) {
     for( var kitKey in state.character.equipment ) {
         var kit = state.character.equipment[kitKey];
 
-        if( kit.quantity < 1 ) {
+        if( kit.quantity < 1 || data.armour.components[kit.componentKey].bodyparts.indexOf(bodyPartKey) < 0 ) {
             continue;
         }
 
@@ -172,7 +174,7 @@ function highlightComponents( bodyPartKey, enable ) {
 }
 
 function highlightBodyparts( componentKey, enable ) {
-    var component = state.armour.components[componentKey];
+    var component = data.armour.components[componentKey];
     for( var bodyPartIndex in component.bodyparts ) {
         var bodyPartKey = component.bodyparts[bodyPartIndex];
 
@@ -185,17 +187,13 @@ function highlightBodyparts( componentKey, enable ) {
 }
 
 function ready() {
-	state.armour = getArmor();
-	state.combat = getCombat();
-    state.bodyparts = getBodyParts();
-
     // Set up a character
     state.character = {};
 
     // Will be { "componentKey-materialKey": { "quantity": 0, "componentKey": "key",  "materialKey": "key" } , ... }
     state.character.equipment = {};
-    for( var componentKey in state.armour.components ) {
-        var component = state.armour.components[componentKey];
+    for( var componentKey in data.armour.components ) {
+        var component = data.armour.components[componentKey];
 
         for( var materialIndex in component.materials ) {
             var materialKey = component.materials[materialIndex];

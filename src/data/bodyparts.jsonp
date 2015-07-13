@@ -10,7 +10,7 @@
  *          "surfaceCoverage": percent of body covered
  *      }
  */
-function getBodyParts() { return {
+data.bodyparts = {
     "sk": {
         "name": "Skull",
         "category": "Head",
@@ -101,4 +101,4 @@ function getBodyParts() { return {
         "category": "Legs",
         "surfaceCoverage": 0.07
     }
-};}
+};

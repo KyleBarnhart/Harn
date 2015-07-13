@@ -11,8 +11,7 @@
  *          "price": price of 100% coverage
  *     }
  */
-function getArmor() { return {
-
+data.armour = {
     "materials": {
         "cloth": {
             "name": "Cloth",
@@ -387,4 +386,4 @@ function getArmor() { return {
             "materials": ["leather"]
         }
     }
-};}
+};

@@ -9,8 +9,7 @@
             }
  *     }
  */
-function getCombat() { return {
-
+data.combat = {
     "aspects": {
         "b": {
             "name": "Blunt"
@@ -31,4 +30,4 @@ function getCombat() { return {
             "name": "Tear"
         }
     }
-};}
+};
