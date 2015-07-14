@@ -6,16 +6,21 @@ body {
     text-align: center;
 }
 
-main {
+#leftColumn, #rightColumn {
     display: inline-block;
+    vertical-align: top;
+}
+
+span {
+    margin: 0px 10px;
 }
 
 table {
     font-family: verdana, arial, sans-serif;
     color: #333333;
-    float: left;
     margin: 15px;
     border-collapse: collapse;
+    width: 95%;
 }
 
 tr:nth-child(even) td{

@@ -1,5 +1,4 @@
 var data = {};
-var custom = {};
 var state = {};
 
 function clone(object) {
@@ -36,21 +35,18 @@ function getBodyPartAspectValues() {
     }
 
     // Set body part and aspect combinations to protective values of armour worn.
-    for( var kitKey in state.character.equipment ) {
-        var kit = state.character.equipment[kitKey];
+    for( var kitKey in state.character.equipment.armour ) {
+        var kit = state.character.equipment.armour[kitKey];
 
         if (kit.quantity < 1) {
             continue;
         }
 
-        var componentBodyparts = data.armour.components[kit.componentKey].bodyparts;
-        var materialAspects = data.armour.materials[kit.materialKey].aspects;
+        for( var bodyPartIndex in kit.component.bodyparts ) {
+            var bodyPartKey = kit.component.bodyparts[bodyPartIndex];
 
-        for( var bodyPartIndex in componentBodyparts ) {
-            var bodyPartKey = componentBodyparts[bodyPartIndex];
-
-            for( var aspectKey in materialAspects ) {
-                bodyPartAspectValues[bodyPartKey + "-" + aspectKey] += materialAspects[aspectKey];
+            for( var aspectKey in kit.material.aspects ) {
+                bodyPartAspectValues[bodyPartKey + "-" + aspectKey] += kit.material.aspects[aspectKey];
             }
         }
     }
@@ -93,21 +89,32 @@ function display() {
     }
     armourRows += "</tr>";
 
+
+    var totalWeight = 0;
+    var totalPrice = 0;
+
     lastCategory = null;
     for( var componentKey in data.armour.components ) {
         var component = data.armour.components[componentKey];
 
         var cssClass = (lastCategory && component.category !== lastCategory) ? " class='newCategory'" : "";
-        armourRows += "<tr " + "id='" + componentKey + "' " + cssClass + "><td>" + component.name + "</td>";
+
+        armourRows += "<tr " + "id='" + componentKey + "' " + cssClass + ">\
+                           <td>" + component.name + "</td>";
+
         lastCategory = component.category;
 
         for( var materialKey in data.armour.materials ) {
             if( component.materials.indexOf( materialKey ) >= 0 ) {
+                var kit = state.character.equipment.armour[componentKey + "-" + materialKey];
+
                 armourRows +=
                     "<td id='" + componentKey + "-" + materialKey + "'>" +
-                        "<input type='checkbox' data-componentKey='" + componentKey + "' data-materialKey='" + materialKey + "'" +
-                            (state.character.equipment[componentKey + "-" + materialKey].quantity > 0 ? "checked" : "") + ">" +
+                        "<input type='checkbox' " + (kit.quantity > 0 ? "checked" : "") + ">" +
                     "</td>";
+
+                totalWeight += kit.quantity * kit.weight;
+                totalPrice += kit.quantity * kit.price;
             } else {
                 armourRows += "<td></td>";
             }
@@ -119,13 +126,14 @@ function display() {
     document.getElementById( "stats" ).innerHTML = statsRows;
     document.getElementById( "armour" ).innerHTML = armourRows;
 
+    // Show totals
+    document.getElementById( "total-weight" ).innerHTML = totalWeight.toFixed(2);
+    document.getElementById( "total-price" ).innerHTML = Math.round(totalPrice) + "d";
+
     // Update armour event
     var armourCheckboxes = document.querySelectorAll( "#armour input" );
     var updateArmour = function () {
-        var componentKey = this.dataset.componentkey;
-        var materialKey = this.dataset.materialkey;
-
-        state.character.equipment[componentKey + "-" + materialKey].quantity += (this.checked ? 1 : -1);
+        state.character.equipment.armour[this.parentNode.id].quantity += (this.checked ? 1 : -1);
 
         display();
     };
@@ -137,29 +145,32 @@ function display() {
     var bodypartRows = document.querySelectorAll( "#stats tr:not(:first-child)" );
     for( var i = 0; i < bodypartRows.length; i++ ) {
         bodypartRows[i].addEventListener( "mouseover", function() {
-            highlightComponents( this.id, true );
+            hoverBodyPart( this, true );
         } );
         bodypartRows[i].addEventListener( "mouseout", function() {
-            highlightComponents( this.id, false );
+            hoverBodyPart( this, false );
         } );
     }
 
 
-    var armourRows = document.querySelectorAll( "#armour tr:not(:first-child)" );
+    var armourRows = document.querySelectorAll( "#armour tr:not(:first-child) td" );
     for( var i = 0; i < armourRows.length; i++ ) {
         // Show what armour protect
         armourRows[i].addEventListener( "mouseover", function() {
-            highlightBodyparts( this.id, true );
+            hoverComponentMaterial( this, true );
         } );
         armourRows[i].addEventListener( "mouseout", function() {
-            highlightBodyparts( this.id, false );
+            hoverComponentMaterial( this, false );
         } );
     }
 }
 
-function highlightComponents( bodyPartKey, enable ) {
-    for( var kitKey in state.character.equipment ) {
-        var kit = state.character.equipment[kitKey];
+function hoverBodyPart( bodyPartRow, enable ) {
+    var bodyPartKey = bodyPartRow.id;
+    var bodypart = data.bodyparts[bodyPartKey];
+
+    for( var kitKey in state.character.equipment.armour ) {
+        var kit = state.character.equipment.armour[kitKey];
 
         if( kit.quantity < 1 || data.armour.components[kit.componentKey].bodyparts.indexOf(bodyPartKey) < 0 ) {
             continue;
@@ -171,10 +182,19 @@ function highlightComponents( bodyPartKey, enable ) {
             removeClass( document.getElementById( kitKey ), "highlight" );
         }
     }
+
+    // Show information
+    if( enable ) {
+        setInfo( bodypart.name, "" );
+    } else {
+        setInfo();
+    }
 }
 
-function highlightBodyparts( componentKey, enable ) {
+function hoverComponentMaterial( componentMaterialCell, enable ) {
+    var componentKey = componentMaterialCell.parentNode.id;
     var component = data.armour.components[componentKey];
+
     for( var bodyPartIndex in component.bodyparts ) {
         var bodyPartKey = component.bodyparts[bodyPartIndex];
 
@@ -184,26 +204,60 @@ function highlightBodyparts( componentKey, enable ) {
             removeClass( document.getElementById( bodyPartKey ), "highlight" );
         }
     }
+
+    // Do the rest only if the piece of equipment is worn
+    if( !componentMaterialCell.id || !state.character.equipment.armour[componentMaterialCell.id] ) {
+        return;
+    }
+
+    var kit = state.character.equipment.armour[componentMaterialCell.id];
+
+    // Show information
+    if( enable ) {
+        setInfo( component.name, "<p>" + component.description + "</p>\
+                                  <strong>Weight:</strong><span>" + kit.weight.toFixed(2) + "</span>\
+                                  <strong>Price:</strong><span>" + Math.round(kit.price) + "d</span>"
+        );
+    } else {
+        setInfo();
+    }
+}
+
+function setInfo( title, body ){
+    document.getElementById("info-title").innerHTML = (title ? title : "Information");
+    document.getElementById("info-body").innerHTML = (body ? body : "");
 }
 
 function ready() {
     // Set up a character
     state.character = {};
 
-    // Will be { "componentKey-materialKey": { "quantity": 0, "componentKey": "key",  "materialKey": "key" } , ... }
     state.character.equipment = {};
+    state.character.equipment.armour = {};
     for( var componentKey in data.armour.components ) {
         var component = data.armour.components[componentKey];
 
         for( var materialIndex in component.materials ) {
             var materialKey = component.materials[materialIndex];
+            var material = data.armour.materials[ materialKey ];
+
+            // Get coverage for weight and price
+            var coverage = 0;
+            for( var bodyPartIndex in component.bodyparts ) {
+                coverage += data.bodyparts[ component.bodyparts[bodyPartIndex] ].coverage;
+            }
 
             var kit = {}
             kit.quantity = 0;
+            kit.coverage = coverage;
             kit.componentKey = componentKey;
+            kit.component = component;
             kit.materialKey = materialKey;
+            kit.material = material;
+            kit.weight = material.weight * coverage;
+            kit.price = material.price * coverage;
 
-            state.character.equipment[componentKey + "-" + materialKey] = kit;
+            state.character.equipment.armour[componentKey + "-" + materialKey] = kit;
         }
     }
 

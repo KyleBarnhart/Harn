@@ -17,8 +17,27 @@
         <h1>Kyle's Hârn Stuff</h1>
     </header>
     <main>
-        <table id="stats"></table>
-        <table id="armour"></table>
+        <div id="leftColumn">
+            <table id="stats"></table>
+
+            <div>
+                <strong>Total Weight:</strong><span id="total-weight">0</span>
+                <strong>Total Price:</strong><span id="total-price">0</span>
+            </div>
+
+            <table>
+                <tr>
+                    <th id="info-title">Information</th>
+                </tr>
+                <tr>
+                    <td id="info-body"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="rightColumn">
+            <table id="armour"></table>
+        </div>
     </main>
 
     <script type="text/javascript" src="harn.js"></script>
