@@ -127,7 +127,7 @@ function display() {
     document.getElementById( "armour" ).innerHTML = armourRows;
 
     // Show totals
-    document.getElementById( "total-weight" ).innerHTML = totalWeight.toFixed(2);
+    document.getElementById( "total-weight" ).innerHTML = totalWeight.toFixed(2) + " lbs";
     document.getElementById( "total-price" ).innerHTML = Math.round(totalPrice) + "d";
 
     // Update armour event
@@ -215,7 +215,7 @@ function hoverComponentMaterial( componentMaterialCell, enable ) {
     // Show information
     if( enable ) {
         setInfo( component.name, "<p>" + component.description + "</p>\
-                                  <strong>Weight:</strong><span>" + kit.weight.toFixed(2) + "</span>\
+                                  <strong>Weight:</strong><span>" + kit.weight.toFixed(2) + " lbs</span>\
                                   <strong>Price:</strong><span>" + Math.round(kit.price) + "d</span>"
         );
     } else {
